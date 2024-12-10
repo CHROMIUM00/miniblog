@@ -1,0 +1,80 @@
+<script setup lang="ts">
+
+
+import {reactive, ref} from "vue";
+import axios from "axios";
+import {useRouter} from "vue-router";
+// import type {FormRules} from "element-plus";
+
+const router = useRouter()
+
+const props = defineProps({
+    postid: String,
+})
+
+const commentItem = ref({
+    author: "",
+    mail: "",
+    body: "",
+})
+
+function submit() {
+    // console.log(commentItem)
+    // console.log(commentItem.value)
+
+    // console.log(props.postid)
+
+    if (commentItem.value.author === "") {
+        commentItem.value.author = "Anonymous"
+    }
+    if (commentItem.value.mail === "") {
+        commentItem.value.mail = "anonymous@anonymous.com"
+    }
+
+    axios.post("http://localhost:5000/api/post/addcomment/" + props.postid, commentItem.value)
+        .then(res => {
+            console.log(res.data)
+            router.go(0)
+        })
+
+}
+
+
+</script>
+
+<template>
+    <div class="comment-maker">
+        <el-form :model="commentItem" :label-position="'top'">
+            <el-row :gutter="20">
+
+                <el-col :span="12">
+
+                    <el-form-item label="昵称">
+                        <el-input placeholder="Anonymous" v-model="commentItem.author"/>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+
+                    <el-form-item label="邮箱">
+                        <el-input v-model="commentItem.mail" placeholder="anonymous@anonymous.com"/>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-form-item prop="body">
+                <el-input type="textarea" placeholder="在这里留言" :rows="5" v-model="commentItem.body" prop="body"/>
+            </el-form-item>
+            <el-form-item>
+                <el-button @click="submit" v-if="commentItem.body !== ''">提交</el-button>
+                <el-button disabled v-else>提交</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+
+
+</template>
+
+<style scoped>
+.comment-maker {
+    margin: 5rem 0;
+}
+</style>
