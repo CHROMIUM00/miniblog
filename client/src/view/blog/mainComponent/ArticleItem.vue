@@ -36,6 +36,7 @@ function toPost() {
 .article {
     background-color: #fff;
     margin: 1rem 0;
+    padding-bottom: 0.1rem;
 
     box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.1);
 
@@ -53,6 +54,15 @@ function toPost() {
 
     ul {
         display: flex;
+        list-style: none;
+        margin: 1rem 0;
+        padding: 0 1.5rem;
+        color: #777;
+
+        li {
+            padding-right: 2rem;
+        }
+
     }
 }
 </style>

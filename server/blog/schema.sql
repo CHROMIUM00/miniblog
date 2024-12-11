@@ -28,7 +28,7 @@ CREATE TABLE comment
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     content TEXT      NOT NULL,
     FOREIGN KEY (post_id) REFERENCES post (id)
-)
+);
 
 
 INSERT INTO comment (id, post_id, author, mail, created, content) VALUES (1, 3, 'averagecommentlover', '123@abc.com', '2024-12-09 14:39:38', 'the quick brown fox jumps over the lazy dog');

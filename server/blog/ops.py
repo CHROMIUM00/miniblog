@@ -31,16 +31,37 @@ def get_post_list():
         " ORDER BY created DESC"
     ).fetchall()  # optimize needed
 
-    response_object['posts'] = []
+    response_object['data'] = []
     for p in dbposts:
         post_data = {
+            "type": "article",
             "id": p["id"],
             "title": p["title"],
             "author": p["author"],
             "desc": p["description"],
-            "created": p["created"].strftime('%Y-%m-%d %H:%M:%S')
+            "created": p["created"].strftime('%Y-%m-%d %H:%M:%S'),
+            "sorting": p["created"].timestamp()
         }
-        response_object["posts"].append(post_data)
+        response_object["data"].append(post_data)
+
+    dbcomments = db.execute(
+        "SELECT c.id, content, author, created"
+        " FROM comment c"
+        " ORDER BY created DESC"  # Query comments based on the post_id
+    ).fetchall()
+
+    for c in dbcomments:
+        comment_data = {
+            "type": "comment",
+            "id": c["id"],
+            "content": c["content"],
+            "author": c["author"],
+            "created": c["created"].strftime('%Y-%m-%d %H:%M:%S'),
+            "sorting": int(c["created"].timestamp())
+        }
+        response_object["data"].append(comment_data)
+
+    response_object["data"].sort(key=lambda x: x["sorting"], reverse=True)
 
     return jsonify(response_object)
 
