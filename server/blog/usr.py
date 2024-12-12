@@ -25,7 +25,3 @@ def login():
     session.clear()
     session["user_id"] = dbuser["id"]
     return jsonify({"status": "success"})
-
-
-if __name__ == "__main__":
-    print(generate_password_hash("123456"))

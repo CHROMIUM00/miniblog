@@ -20,8 +20,8 @@ function getPostDetail() {
             postData.value = res.data.post;
             console.log(postData.value)
         }).catch(err => {
-            console.log(err)
-        })
+        console.log(err)
+    })
 }
 
 function getComments() {
@@ -32,8 +32,8 @@ function getComments() {
             });
             console.log(commentData.value)
         }).catch(err => {
-            console.log(err)
-        })
+        console.log(err)
+    })
 
 }
 
@@ -45,19 +45,22 @@ onBeforeMount(() => {
 
 <template>
 
-    <div class="title">
-        <h1>
-            {{ postData.title }}
-        </h1>
-        <ul>
-            <li>{{ postData.created }}</li>
-            <li>created by <strong>@{{ postData.author }}</strong></li>
-            <li>viewed</li>
-        </ul>
-    </div>
-    <div v-html="postData.body" class="content"></div>
+    <div v-if="postData">
 
-    <hr class="end">
+        <div class="title">
+            <h1>
+                {{ postData.title }}
+            </h1>
+            <ul>
+                <li>{{ postData.created }}</li>
+                <li>created by <strong>@{{ postData.author }}</strong></li>
+                <li>viewed</li>
+            </ul>
+        </div>
+        <div v-html="postData.body" class="content"></div>
+
+        <hr class="end">
+    </div>
     <CommentMaker :postid="route.params.id"/>
     <!--    <commentList />-->
     <!--    <commentList />-->
@@ -66,7 +69,7 @@ onBeforeMount(() => {
     <hr>
 
     <!-- for -->
-    <div class="nodata" v-if="commentData.length === 0">
+    <div class="nodata" v-if="!commentData || commentData.length === 0">
         <span>nodata</span>
     </div>
     <div v-for="i in commentData" :key="i.id">
@@ -151,6 +154,7 @@ onBeforeMount(() => {
 
 .nodata {
     display: flex;
+
     span {
         color: #999999;
         margin: 3em auto;
