@@ -27,9 +27,6 @@ function submit() {
     if (commentItem.value.author === "") {
         commentItem.value.author = "Anonymous"
     }
-    if (commentItem.value.mail === "") {
-        commentItem.value.mail = "anonymous@anonymous.com"
-    }
 
     axios.post("http://localhost:5000/api/post/addcomment/" + props.postid, commentItem.value)
         .then(res => {
@@ -56,7 +53,7 @@ function submit() {
                 <el-col :span="12">
 
                     <el-form-item label="邮箱">
-                        <el-input v-model="commentItem.mail" placeholder="anonymous@anonymous.com"/>
+                        <el-input v-model="commentItem.mail" placeholder="填写邮箱可能收到回复"/>
                     </el-form-item>
                 </el-col>
             </el-row>

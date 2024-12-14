@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {ref} from "vue"
 import LoginPopover from "@/view/blog/mainComponent/LoginPopover.vue";
+import router from "@/router";
 
 console.log("main component online")
 
@@ -10,13 +11,17 @@ console.log("main component online")
 
 const login = ref(false)
 
+function toMain() {
+    router.push({path: `/`})
+}
+
 </script>
 
 <template>
     <div class="container">
 
         <div class="aside">
-            <img src="@/assets/gww.png" alt=""/>
+            <img src="@/assets/gww.png" alt="" @click="toMain"/>
             <div class="aside-content">
                 <RouterLink to="/" class="links">色彩無盡</RouterLink>
                 <RouterLink to="/" class="links">首页</RouterLink>
@@ -33,9 +38,9 @@ const login = ref(false)
         </div>
     </div>
 
-<!--    <el-dialog v-model="login">-->
-        <LoginPopover v-model="login"/>
-<!--    </el-dialog>-->
+    <!--    <el-dialog v-model="login">-->
+    <LoginPopover v-model="login"/>
+    <!--    </el-dialog>-->
 </template>
 
 <style scoped>
@@ -58,6 +63,10 @@ const login = ref(false)
         align-items: center;
         align-content: center;
 
+        img {
+            cursor: pointer;
+        }
+
         .aside-content {
             height: 100vh;
             align-items: normal;
@@ -69,6 +78,7 @@ const login = ref(false)
                 margin: 1rem;
                 color: #000;
                 text-decoration: none;
+                cursor: pointer;
 
                 &:hover {
                     color: #ff6666;

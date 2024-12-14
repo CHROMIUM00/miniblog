@@ -37,7 +37,7 @@ function toPost() {
     background-color: #fff;
     margin: 1rem 0;
     padding-bottom: 0.1rem;
-
+    cursor: pointer;
     box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.1);
 
     .title {

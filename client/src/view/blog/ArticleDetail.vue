@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onBeforeMount, ref} from "vue"
+import {onBeforeMount, onMounted, ref} from "vue"
 import {useRoute} from "vue-router"
 import axios from "axios";
 import CommentMaker from "@/view/blog/mainComponent/CommentMaker.vue";
@@ -41,6 +41,11 @@ onBeforeMount(() => {
     getPostDetail();
     getComments();
 })
+
+onMounted(() => {
+    window.scrollTo(0, 0);
+})
+
 </script>
 
 <template>
