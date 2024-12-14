@@ -9,13 +9,15 @@ import {useRouter} from "vue-router";
 const router = useRouter()
 
 const props = defineProps({
-    postid: String,
+    post_id: String,
+    post_title: String,
 })
 
 const commentItem = ref({
     author: "",
     mail: "",
     body: "",
+    post_title: props.post_title,
 })
 
 function submit() {
@@ -28,7 +30,7 @@ function submit() {
         commentItem.value.author = "Anonymous"
     }
 
-    axios.post("http://localhost:5000/api/post/addcomment/" + props.postid, commentItem.value)
+    axios.post("http://localhost:5000/api/post/addcomment/" + props.post_id, commentItem.value)
         .then(res => {
             console.log(res.data)
             router.go(0)

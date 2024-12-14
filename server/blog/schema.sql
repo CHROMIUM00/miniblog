@@ -21,22 +21,24 @@ CREATE TABLE post
 
 CREATE TABLE comment
 (
-    id      INTEGER PRIMARY KEY AUTOINCREMENT,
-    post_id INTEGER   NOT NULL,
-    author  TEXT      NOT NULL,
-    mail    TEXT      NOT NULL,
-    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    content TEXT      NOT NULL,
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    post_id    INTEGER   NOT NULL,
+    post_title TEXT      NOT NULL,
+    author     TEXT      NOT NULL,
+    mail       TEXT      NOT NULL,
+    created    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    content    TEXT      NOT NULL,
     FOREIGN KEY (post_id) REFERENCES post (id)
 );
 
 
-INSERT INTO comment (id, post_id, author, mail, created, content) VALUES (1, 3, 'averagecommentlover', '123@abc.com', '2024-12-09 14:39:38', 'the quick brown fox jumps over the lazy dog');
-INSERT INTO comment (id, post_id, author, mail, created, content) VALUES (2, 3, 'Anonymous', 'anonymous@anonymous.com', '2024-12-09 15:46:41', 'nihao');
 
-INSERT INTO post (id, author, created, title, body, description) VALUES (1, 'me', '2024-12-07 14:03:32', 'test#1', 'omggggggggggggg', 'nihao');
-INSERT INTO post (id, author, created, title, body, description) VALUES (2, 'alsome', '2024-12-08 10:21:01', 'hgreigntsh', '<p><em>nihao</em>ginguiresngiurneaig</p>\n', 'tett');
-INSERT INTO post (id, author, created, title, body, description) VALUES (3, 'mdit', '2024-12-08 12:08:21', 'mdtest', '<h1>h1 Heading</h1>
+INSERT INTO post (id, author, created, title, body, description)
+VALUES (1, 'me', '2024-12-07 14:03:32', 'test#1', 'omggggggggggggg', 'nihao');
+INSERT INTO post (id, author, created, title, body, description)
+VALUES (2, 'alsome', '2024-12-08 10:21:01', 'hgreigntsh', '<p><em>nihao</em>ginguiresngiurneaig</p>\n', 'tett');
+INSERT INTO post (id, author, created, title, body, description)
+VALUES (3, 'mdit', '2024-12-08 12:08:21', 'mdtest', '<h1>h1 Heading</h1>
 <h2>h2 Heading</h2>
 <h3>h3 Heading</h3>
 <h4>h4 Heading</h4>
@@ -187,4 +189,6 @@ line 3 of code
 <p><img src="https://octodex.github.com/images/dojocat.jpg" alt="Alt text" title="The Dojocat"></p>
 <p>With a reference later in the document defining the URL location:</p>', 'testing md');
 
-INSERT INTO user (id, username, password) VALUES (1, 'CHROMIUM00', 'scrypt:32768:8:1$UrJMQZ033hhhrcvp$18c59d2a1eb6c1b0853b9c508edbca43e31efdf8fde666cf87c7b9a80d60388c878890d1a2e6c3f1773d7c1cfb145c828bc5c932a19050c042aef3fb4da15638');
+INSERT INTO user (id, username, password)
+VALUES (1, 'CHROMIUM00',
+        'scrypt:32768:8:1$UrJMQZ033hhhrcvp$18c59d2a1eb6c1b0853b9c508edbca43e31efdf8fde666cf87c7b9a80d60388c878890d1a2e6c3f1773d7c1cfb145c828bc5c932a19050c042aef3fb4da15638');

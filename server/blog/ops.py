@@ -26,9 +26,8 @@ def get_post_list():
     response_object = {"status": "nihao"}
 
     dbposts = db.execute(
-        "SELECT p.id, title, author, description, created"
+        "SELECT p.id, title, description, created, author"
         " FROM post p"
-        " ORDER BY created DESC"
     ).fetchall()  # optimize needed
 
     response_object['data'] = []
@@ -37,25 +36,25 @@ def get_post_list():
             "type": "article",
             "id": p["id"],
             "title": p["title"],
-            "author": p["author"],
             "desc": p["description"],
             "created": p["created"].strftime('%Y-%m-%d %H:%M:%S'),
-            "sorting": p["created"].timestamp()
+            "author": p["author"],
+            "sorting": int(p["created"].timestamp())
         }
         response_object["data"].append(post_data)
 
     dbcomments = db.execute(
-        "SELECT c.id, content, author, created"
+        "SELECT c.id, post_title, author, content, created"
         " FROM comment c"
-        " ORDER BY created DESC"  # Query comments based on the post_id
     ).fetchall()
 
     for c in dbcomments:
         comment_data = {
             "type": "comment",
             "id": c["id"],
-            "content": c["content"],
+            "post_title": c["post_title"],
             "author": c["author"],
+            "content": c["content"],
             "created": c["created"].strftime('%Y-%m-%d %H:%M:%S'),
             "sorting": int(c["created"].timestamp())
         }
@@ -122,20 +121,24 @@ def get_comment(postid):
 @post.route("addcomment/<int:postid>", methods=["POST"])
 def add_comment(postid):
     comment_data = request.get_json()
-    comment = {
-        "author": comment_data.get("author"),
-        "mail": comment_data.get("mail"),
-        "content": comment_data.get("body"),
-    }
+    # comment = {
+    #     "post_title": comment_data.get("post_title"),
+    #     "author": comment_data.get("author"),
+    #     "mail": comment_data.get("mail"),
+    #     "content": comment_data.get("body"),
+    # }
     db = get_db()
     db.execute(
-        "INSERT INTO comment (post_id, author, mail, content)"
-        " VALUES (?, ?, ?, ?)",
-        (postid, comment["author"], comment["mail"], comment["content"])
+        "INSERT INTO comment (post_id, post_title, author, mail, content)"
+        " VALUES (?, ?, ?, ?, ?)",
+        (postid,
+         comment_data.get("post_title"),
+         comment_data.get("author"),
+         comment_data.get("mail"),
+         comment_data.get("body"),
+         )
     )
     db.commit()
     print("hi")
 
     return jsonify({"status": "nihao"})
-
-

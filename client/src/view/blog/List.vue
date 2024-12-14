@@ -15,8 +15,8 @@ function getPost() {
             postData.value = res.data.data;
             console.log(postData.value)
         }).catch(err => {
-            console.log(err)
-        })
+        console.log(err)
+    })
 }
 
 onMounted(() => {
@@ -31,7 +31,8 @@ onMounted(() => {
                      :date="i.created" :author="i.author"
                      :id="i.id"/>
         <!--                <infocomment?>-->
-        <CommentItem v-if="i.type == 'comment'" :author="i.author" :body="i.content" :date="i.created"/>
+        <CommentItem v-if="i.type == 'comment'" :author="i.author" :body="i.content"
+                     :date="i.created" :to="i.post_title"/>
         <hr v-if="ind !== postData.length - 1"/>
     </div>
 </template>

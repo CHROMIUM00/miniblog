@@ -65,22 +65,22 @@ onMounted(() => {
         <div v-html="postData.body" class="content"></div>
 
         <hr class="end">
-    </div>
-    <CommentMaker :postid="route.params.id"/>
-    <!--    <commentList />-->
-    <!--    <commentList />-->
+        <CommentMaker :post_id="route.params.id" :post_title="postData.title"/>
+        <!--    <commentList />-->
+        <!--    <commentList />-->
 
-    <h2>评论</h2>
-    <hr>
+        <h2>评论</h2>
+        <hr>
 
-    <!-- for -->
-    <div class="nodata" v-if="!commentData || commentData.length === 0">
-        <span>nodata</span>
-    </div>
-    <div v-for="i in commentData" :key="i.id">
+        <!-- for -->
+        <div class="nodata" v-if="!commentData || commentData.length === 0">
+            <span>nodata</span>
+        </div>
+        <div v-for="i in commentData" :key="i.id">
 
-        <CommentItem :author="i.author" :body="i.content" :date="i.created"/>
+            <CommentItem :author="i.author" :body="i.content" :date="i.created"/>
 
+        </div>
     </div>
     <!--    <CommentItem :author="'sadwa'" :body="'the quick brown fox jumps over the lazy dog'" :date="'1234/12/12'"/>-->
 
