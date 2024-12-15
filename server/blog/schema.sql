@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS post;
 DROP TABLE IF EXISTS comment;
+DROP TABLE IF EXISTS list;
 
 CREATE TABLE user
 (
@@ -31,6 +32,12 @@ CREATE TABLE comment
     FOREIGN KEY (post_id) REFERENCES post (id)
 );
 
+CREATE TABLE list
+(
+    id        INTEGER PRIMARY KEY AUTOINCREMENT,
+    type      TEXT    NOT NULL,
+    remote_id INTEGER NOT NULL
+);
 
 
 INSERT INTO post (id, author, created, title, body, description)

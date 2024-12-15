@@ -21,6 +21,95 @@ def add_post():
 
 
 @post.route("getlist", methods=["GET"])
+def getlist():
+    db = get_db()
+    response_object = {"status": "nihao"}
+
+    dblist = db.execute(
+        "SELECT type, remote_id"
+        " FROM list"
+        " ORDER BY id DESC"
+    ).fetchall()  # try fetchmany()
+
+    response_object["data"] = []
+    for i in dblist:
+        if i["type"] == "post":
+            entry = db.execute(
+                "SELECT id, title, description, created, author"
+                " FROM post"
+                " WHERE id = ?",
+                (i["remote_id"],)
+            ).fetchone()
+            response_object["data"].append({
+                "type": "article",
+                "id": entry["id"],
+                "title": entry["title"],
+                "desc": entry["description"],
+                "created": entry["created"].strftime('%Y-%m-%d %H:%M:%S'),
+                "author": entry["author"],
+                # "sorting": int(entry["created"].timestamp())
+            })
+        elif i["type"] == "comment":
+            entry = db.execute(
+                "SELECT id, post_title, author, content, created"
+                " FROM comment"
+                " WHERE id = ?",
+                (i["remote_id"],)
+            ).fetchone()
+            response_object["data"].append({
+                "type": "comment",
+                "id": entry["id"],
+                "post_title": entry["post_title"],
+                "author": entry["author"],
+                "content": entry["content"],
+                "created": entry["created"].strftime('%Y-%m-%d %H:%M:%S'),
+                # "sorting": int(entry["created"].timestamp())
+            })
+
+    return jsonify(response_object)
+
+    #
+    # dbposts = db.execute(
+    #     "SELECT p.id, title, description, created, author"
+    #     " FROM post p"
+    # ).fetchall()  # optimize needed
+    #
+    # response_object['data'] = []
+    # for p in dbposts:
+    #     post_data = {
+    #         "type": "article",
+    #         "id": p["id"],
+    #         "title": p["title"],
+    #         "desc": p["description"],
+    #         "created": p["created"].strftime('%Y-%m-%d %H:%M:%S'),
+    #         "author": p["author"],
+    #         "sorting": int(p["created"].timestamp())
+    #     }
+    #     response_object["data"].append(post_data)
+    #
+    # dbcomments = db.execute(
+    #     "SELECT c.id, post_title, author, content, created"
+    #     " FROM comment c"
+    # ).fetchall()
+    #
+    # for c in dbcomments:
+    #     comment_data = {
+    #         "type": "comment",
+    #         "id": c["id"],
+    #         "post_title": c["post_title"],
+    #         "author": c["author"],
+    #         "content": c["content"],
+    #         "created": c["created"].strftime('%Y-%m-%d %H:%M:%S'),
+    #         "sorting": int(c["created"].timestamp())
+    #     }
+    #     response_object["data"].append(comment_data)
+    #
+    # response_object["data"].sort(key=lambda x: x["sorting"], reverse=True)
+    #
+    # return jsonify(response_object)
+
+
+@post.route("getpostlist", methods=["GET"])
 def get_post_list():
     db = get_db()
     response_object = {"status": "nihao"}
@@ -28,7 +117,7 @@ def get_post_list():
     dbposts = db.execute(
         "SELECT p.id, title, description, created, author"
         " FROM post p"
-    ).fetchall()  # optimize needed
+    ).fetchall()
 
     response_object['data'] = []
     for p in dbposts:
@@ -43,11 +132,20 @@ def get_post_list():
         }
         response_object["data"].append(post_data)
 
+    return jsonify(response_object)
+
+
+@post.route("getcommentlist", methods=["GET"])
+def get_comment_list():
+    db = get_db()
+    response_object = {"status": "nihao"}
+
     dbcomments = db.execute(
         "SELECT c.id, post_title, author, content, created"
         " FROM comment c"
     ).fetchall()
 
+    response_object['data'] = []
     for c in dbcomments:
         comment_data = {
             "type": "comment",
@@ -59,8 +157,6 @@ def get_post_list():
             "sorting": int(c["created"].timestamp())
         }
         response_object["data"].append(comment_data)
-
-    response_object["data"].sort(key=lambda x: x["sorting"], reverse=True)
 
     return jsonify(response_object)
 
@@ -128,7 +224,7 @@ def add_comment(postid):
     #     "content": comment_data.get("body"),
     # }
     db = get_db()
-    db.execute(
+    cur = db.execute(
         "INSERT INTO comment (post_id, post_title, author, mail, content)"
         " VALUES (?, ?, ?, ?, ?)",
         (postid,
@@ -139,6 +235,13 @@ def add_comment(postid):
          )
     )
     db.commit()
-    print("hi")
+    
+    comment_id = cur.lastrowid
+    db.execute(
+        "INSERT INTO list (type, remote_id)"
+        " VALUES (?, ?)",
+        ("comment", comment_id)
+    )
+    db.commit()
 
     return jsonify({"status": "nihao"})

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {onMounted, ref} from "vue"
-import axios from "axios";
+import axios, {post} from "axios";
 
 import ArticleItem from "@/view/blog/mainComponent/ArticleItem.vue";
 import CommentItem from "@/view/blog/mainComponent/CommentItem.vue";
@@ -11,12 +11,8 @@ const postData = ref();
 function getPost() {
     axios.get("http://localhost:5000/api/post/getlist")
         .then(res => {
-            // console.log(res.data)
             postData.value = res.data.data;
-            console.log(postData.value)
-        }).catch(err => {
-        console.log(err)
-    })
+        })
 }
 
 onMounted(() => {

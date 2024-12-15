@@ -7,7 +7,7 @@ const router = useRouter()
 const props = defineProps({
     author: String,
     body: String,
-    date: Date,
+    date: String,
     title: String,
 
     id: Number
