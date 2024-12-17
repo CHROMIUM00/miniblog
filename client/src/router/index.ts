@@ -24,9 +24,14 @@ const router = createRouter({
             ]
         },
         {
+            path: "/authorization",
+            component: () => import("@/view/manage/authorization.vue")
+        },
+        {
             path: "/admin",
             component: () => import("@/view/manage/manageView.vue"),
             children: [
+
                 {
                     path: "",
                     component: () => import("@/view/manage/postTable.vue")

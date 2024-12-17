@@ -1,6 +1,21 @@
 <script setup lang="ts">
+import {onBeforeMount, onMounted} from "vue";
+import {check} from "./auth.ts"
+import axios from "axios";
+import {useRouter} from "vue-router";
 
+const router = useRouter();
 
+onMounted(() => {
+    console.log("hi")
+    axios.get("http://localhost:5000/api/auth/state")
+        .then(res => {
+            console.log(res.data)
+            if (res.data.logged === "false") {
+                router.push({path: "/authorization"})
+            }
+        })
+})
 </script>
 
 <template>
