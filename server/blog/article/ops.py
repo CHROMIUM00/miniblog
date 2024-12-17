@@ -1,23 +1,10 @@
-from flask import Flask, jsonify, Blueprint, request
-from markdown_it import MarkdownIt
+import os
 
-from .db import get_db
+from flask import Flask, jsonify, Blueprint, request
+
+from ..db import get_db
 
 post = Blueprint("post", __name__)
-md = MarkdownIt("commonmark").enable("table")
-
-
-@post.route("add", methods=["POST"])
-def add_post():
-    post_data = request.get_json()
-
-    title = post_data.get("title")
-    author = post_data.get("author")
-    body = post_data.get("body")
-
-    db = get_db()
-
-    return jsonify({"status": "nihao"})  # TODO later
 
 
 @post.route("getlist", methods=["GET"])
@@ -33,7 +20,7 @@ def getlist():
 
     response_object["data"] = []
     for i in dblist:
-        if i["type"] == "post":
+        if i["type"] == "article":
             entry = db.execute(
                 "SELECT id, title, description, created, author"
                 " FROM post"
@@ -47,7 +34,6 @@ def getlist():
                 "desc": entry["description"],
                 "created": entry["created"].strftime('%Y-%m-%d %H:%M:%S'),
                 "author": entry["author"],
-                # "sorting": int(entry["created"].timestamp())
             })
         elif i["type"] == "comment":
             entry = db.execute(
@@ -63,50 +49,9 @@ def getlist():
                 "author": entry["author"],
                 "content": entry["content"],
                 "created": entry["created"].strftime('%Y-%m-%d %H:%M:%S'),
-                # "sorting": int(entry["created"].timestamp())
             })
 
     return jsonify(response_object)
-
-    #
-    # dbposts = db.execute(
-    #     "SELECT p.id, title, description, created, author"
-    #     " FROM post p"
-    # ).fetchall()  # optimize needed
-    #
-    # response_object['data'] = []
-    # for p in dbposts:
-    #     post_data = {
-    #         "type": "article",
-    #         "id": p["id"],
-    #         "title": p["title"],
-    #         "desc": p["description"],
-    #         "created": p["created"].strftime('%Y-%m-%d %H:%M:%S'),
-    #         "author": p["author"],
-    #         "sorting": int(p["created"].timestamp())
-    #     }
-    #     response_object["data"].append(post_data)
-    #
-    # dbcomments = db.execute(
-    #     "SELECT c.id, post_title, author, content, created"
-    #     " FROM comment c"
-    # ).fetchall()
-    #
-    # for c in dbcomments:
-    #     comment_data = {
-    #         "type": "comment",
-    #         "id": c["id"],
-    #         "post_title": c["post_title"],
-    #         "author": c["author"],
-    #         "content": c["content"],
-    #         "created": c["created"].strftime('%Y-%m-%d %H:%M:%S'),
-    #         "sorting": int(c["created"].timestamp())
-    #     }
-    #     response_object["data"].append(comment_data)
-    #
-    # response_object["data"].sort(key=lambda x: x["sorting"], reverse=True)
-    #
-    # return jsonify(response_object)
 
 
 @post.route("getpostlist", methods=["GET"])
@@ -166,23 +111,25 @@ def get_post(id):
     response_object = {"status": "nihao"}
     db = get_db()
     post = db.execute(
-        "SELECT p.id, title, author, body, created"
+        "SELECT p.id, title, author, created, description"
         " FROM post p"
-        " WHERE p.id = ?",  # Adding WHERE clause to fetch the specific post by id
+        " WHERE p.id = ?",
         (id,)
     ).fetchone()
 
     if post is None:
-        return jsonify({"error": "Post not found"}), 404  # Return 404 if post doesn't exist
+        return jsonify({"error": "Post not found"}), 404
 
-    # Format the post data similar to get_post_list
     post_data = {
         "id": post["id"],
         "title": post["title"],
         "author": post["author"],
-        "body": md.render(post["body"]),
+        "desc": post["description"],
         "created": post["created"].strftime('%Y-%m-%d %H:%M:%S')
     }
+    with open(f"server/instance/articles/{id}", "r") as f:
+        post_data["body"] = f.read()
+
     response_object["post"] = post_data
 
     return jsonify(response_object)
@@ -197,7 +144,7 @@ def get_comment(postid):
         "SELECT c.id, content, author, created"
         " FROM comment c"
         " WHERE c.post_id = ?"
-        " ORDER BY created DESC",  # Query comments based on the post_id
+        " ORDER BY created DESC",
         (postid,)
     ).fetchall()
 
@@ -217,12 +164,6 @@ def get_comment(postid):
 @post.route("addcomment/<int:postid>", methods=["POST"])
 def add_comment(postid):
     comment_data = request.get_json()
-    # comment = {
-    #     "post_title": comment_data.get("post_title"),
-    #     "author": comment_data.get("author"),
-    #     "mail": comment_data.get("mail"),
-    #     "content": comment_data.get("body"),
-    # }
     db = get_db()
     cur = db.execute(
         "INSERT INTO comment (post_id, post_title, author, mail, content)"
@@ -235,7 +176,7 @@ def add_comment(postid):
          )
     )
     db.commit()
-    
+
     comment_id = cur.lastrowid
     db.execute(
         "INSERT INTO list (type, remote_id)"
@@ -245,3 +186,98 @@ def add_comment(postid):
     db.commit()
 
     return jsonify({"status": "nihao"})
+
+
+@post.route("create", methods=["POST"])
+def create():
+    article = request.get_json()
+    db = get_db()
+    cur = db.execute(
+        "INSERT INTO post (title, author, description)"
+        " VALUES (?, ?, ?)",
+        (article.get("title"),
+         article.get("author"),
+         article.get("desc"),
+         )
+    )
+    db.commit()
+
+    article_id = cur.lastrowid
+    print(article_id)
+    print(f"{article_id}")
+    with open(f"server/instance/articles/{article_id}", "w") as f:
+        f.write(article.get("body"))
+
+    db.execute(
+        "INSERT INTO list (type, remote_id)"
+        " VALUES (?, ?)",
+        ("article", article_id)
+    )
+    db.commit()
+
+    return jsonify({"status": "success"})
+
+
+@post.route("update/<int:id>", methods=["POST"])
+def update(id):
+    updated = request.get_json()
+    db = get_db()
+    db.execute(
+        "UPDATE post"
+        " SET title = ?, created = CURRENT_TIMESTAMP, author = ?, description = ?"
+        " WHERE id = ?",
+        (updated.get("title"),
+         updated.get("author"),
+         updated.get("desc"),
+         id,
+         )
+    )
+    db.commit()
+
+    with open(f"server/instance/articles/{id}", "w") as f:
+        f.write(updated.get("body"))
+
+    return jsonify({"status": "success"})
+
+
+@post.route("delete/<int:id>", methods=["POST"])
+def delete(id):
+    db = get_db()
+    db.execute(
+        "DELETE FROM post"
+        " WHERE id = ?",
+        (id,)
+    )
+
+    os.remove(f"server/instance/articles/{id}")
+
+    comment_id = db.execute(
+        "SELECT id"
+        " FROM comment"
+        " WHERE post_id = ?",
+        (id,)
+    )
+    for i in comment_id:
+        db.execute(
+            "DELETE FROM list"
+            " WHERE remote_id = ?",
+            (i["id"],)
+        )
+
+    db.execute(
+        "DELETE FROM comment"
+        " WHERE post_id = ?",
+        (id,)
+    )
+
+    db.execute(
+        "DELETE FROM list"
+        " WHERE remote_id = ?",
+        (id,)
+    )
+
+    db.commit()
+
+    print(f"deleted {id}")
+
+    return jsonify({"status": "success"})

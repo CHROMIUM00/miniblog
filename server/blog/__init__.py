@@ -21,21 +21,21 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-
     from . import db
     db.init_app(app)
-
 
     @app.route('/test1')
     def hello():
         return "nihao"
 
-
-    from . import ops
+    from .article import ops
     app.register_blueprint(ops.post, url_prefix='/api/post')
 
-    from . import usr
-    app.register_blueprint(usr.user, url_prefix='/api/user')
+    # from . import usr
+    # app.register_blueprint(usr.user, url_prefix='/api/user')
+
+    from . import auth
+    app.register_blueprint(auth.auth, url_prefix='/api/auth')
 
     return app
 

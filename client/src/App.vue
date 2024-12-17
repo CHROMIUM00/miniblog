@@ -2,8 +2,7 @@
 </script>
 
 <template>
-<RouterView/>
-    hi
+    <RouterView/>
 </template>
 
 <style scoped>

@@ -1,0 +1,19 @@
+.v-md-editor-preview {
+    word-break: break-word;
+
+    h1, h2, h3, h4, h5, h6 {
+        padding: 1rem 0 0 0;
+        text-decoration: underline #ff6666 0.3em;
+        text-decoration-skip-ink: none;
+    }
+
+
+    img {
+        width: 200px;
+        object-fit: cover;
+    }
+
+    code {
+        font-family: "Consolas";
+    }
+}

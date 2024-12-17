@@ -23,6 +23,24 @@ const router = createRouter({
                 }
             ]
         },
+        {
+            path: "/admin",
+            component: () => import("@/view/manage/manageView.vue"),
+            children: [
+                {
+                    path: "",
+                    component: () => import("@/view/manage/postTable.vue")
+                },
+                {
+                    path: "create",
+                    component: () => import("@/view/manage/createArticle.vue")
+                },
+                {
+                    path: "update/:id",
+                    component: () => import("@/view/manage/updateArticle.vue")
+                }
+            ]
+        }
         // {
         //     path: "/post",
         //     component

@@ -62,8 +62,8 @@ onMounted(() => {
                 <li>viewed</li>
             </ul>
         </div>
-        <div v-html="postData.body" class="content"></div>
-
+        <!--        <div v-html="postData.body" class="content"></div>-->
+        <v-md-editor :model-value="postData.body" mode="preview"></v-md-editor>
         <hr class="end">
         <CommentMaker :post_id="route.params.id" :post_title="postData.title"/>
         <!--    <commentList />-->
