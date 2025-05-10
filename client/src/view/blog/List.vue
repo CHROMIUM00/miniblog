@@ -22,13 +22,13 @@ onMounted(() => {
 
 <template>
     <div v-for="(i, ind) in listData" :key="ind">
-        <!--                {{i.title}}-->
         <ArticleItem v-if="i.type == 'article'" :title="i.title" :body="i.desc"
                      :date="i.created" :author="i.author"
                      :id="i.id"/>
-        <!--                <infocomment?>-->
+
         <CommentItem v-if="i.type == 'comment'" :author="i.author" :body="i.content"
-                     :date="i.created" :to="i.post_title"/>
+                     :date="i.created" :postTitle="i.post_title" :id="i.post_id"/>
+
         <hr v-if="ind !== listData.length - 1"/>
     </div>
 </template>

@@ -1,19 +1,31 @@
 <script setup lang="ts">
+import {useRouter} from "vue-router";
+
+const router = useRouter()
 
 const props = defineProps({
     author: String,
     body: String,
     date: String,
-    to: String,
+    postTitle: String,
+    id: Number,
 })
+
+function toPost() {
+    router.push({path: `/post/${props.id}`})
+}
 
 </script>
 
 <template>
 
     <div class="comment">
-        <div class="to" v-if="to != null">
-            <p>文章 <strong>{{ to }}</strong> 的评论</p>
+        <div class="to" v-if="postTitle != null" @click="toPost()">
+            <p class="title">文章 <strong>{{ postTitle }}</strong> 的评论
+                <el-icon>
+                    <TopRight/>
+                </el-icon>
+            </p>
         </div>
         <div class="comment-item">
             <p class="name">来自 <strong>@{{ author }}</strong></p>
@@ -32,6 +44,12 @@ const props = defineProps({
     .to {
         font-size: 0.8em;
         color: #999999;
+
+        .title {
+            &:hover {
+                cursor: pointer;
+            }
+        }
     }
 
     .comment-item {

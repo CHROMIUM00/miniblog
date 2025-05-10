@@ -40,6 +40,8 @@ function toPost() {
     cursor: pointer;
     box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.1);
 
+    transition: box-shadow 0.2s;
+
     .title {
         margin: 0;
         padding: 0.3rem 1.5rem;
@@ -63,6 +65,10 @@ function toPost() {
             padding-right: 2rem;
         }
 
+    }
+
+    &:hover {
+        box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.5);
     }
 }
 </style>

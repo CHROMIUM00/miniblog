@@ -37,7 +37,7 @@ def getlist():
             })
         elif i["type"] == "comment":
             entry = db.execute(
-                "SELECT id, post_title, author, content, created"
+                "SELECT id, post_title, post_id,author, content, created"
                 " FROM comment"
                 " WHERE id = ?",
                 (i["remote_id"],)
@@ -45,6 +45,7 @@ def getlist():
             response_object["data"].append({
                 "type": "comment",
                 "id": entry["id"],
+                "post_id": entry["post_id"],
                 "post_title": entry["post_title"],
                 "author": entry["author"],
                 "content": entry["content"],

@@ -24,10 +24,17 @@ const hljsTheme = createHljsTheme({
 
 VueMarkdownEditor.vMdParser.theme(hljsTheme);
 
+
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+
 const app = createApp(App)
 
 app.use(router)
 
 app.use(VueMarkdownEditor)
+
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component)
+}
 
 app.mount('#app')
