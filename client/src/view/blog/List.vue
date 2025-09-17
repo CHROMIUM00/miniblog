@@ -18,6 +18,7 @@ function getList() {
 onMounted(() => {
     getList();
 })
+
 </script>
 
 <template>

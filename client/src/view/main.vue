@@ -3,8 +3,6 @@ import {ref} from "vue"
 import LoginPopover from "@/view/blog/mainComponent/LoginPopover.vue";
 import router from "@/router";
 
-console.log("main component online")
-
 // function login() {
 //     console.log("trytologin")
 // }
@@ -36,12 +34,10 @@ function toMain() {
             <RouterView/>
 
         </div>
-        
+
     </div>
 
-    <!--    <el-dialog v-model="login">-->
     <LoginPopover v-model="login"/>
-    <!--    </el-dialog>-->
 </template>
 
 <style scoped>
@@ -52,7 +48,6 @@ function toMain() {
     display: flex;
     flex-flow: column;
     min-height: 100vh;
-    /*//background-color: #eee;*/
 
     .aside {
 
@@ -72,7 +67,6 @@ function toMain() {
             height: 100vh;
             align-items: normal;
             display: flex;
-            /*flex-direction: column;*/
             writing-mode: vertical-rl;
 
             .links {
@@ -92,13 +86,9 @@ function toMain() {
     .main {
         z-index: 1;
         width: var(--content-width);
-        /*//padding-left: var(--content-padding);*/
-        /*//padding-right: var(--content-padding);*/
         margin: 0 var(--content-margin);
         padding: 0 1rem;
         background-color: #fff;
-
-        /*//height: 100vh;*/
 
         hr {
             margin: 2rem 0;

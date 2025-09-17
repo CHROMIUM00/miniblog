@@ -34,9 +34,6 @@ def create_app(test_config=None):
     from .article import ops
     app.register_blueprint(ops.post, url_prefix='/api/post')
 
-    # from . import usr
-    # app.register_blueprint(usr.user, url_prefix='/api/user')
-
     from . import auth
     app.register_blueprint(auth.auth, url_prefix='/api/auth')
 

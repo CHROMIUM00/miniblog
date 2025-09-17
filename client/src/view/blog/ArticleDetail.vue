@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import {onBeforeMount, onMounted, ref} from "vue"
 import {useRoute} from "vue-router"
 import axios from "axios";
@@ -11,7 +12,6 @@ const route = useRoute();
 const postData = ref();
 const commentData = ref();
 
-// const postid = Number(route.params.id)
 
 function getPostDetail() {
     axios.get("http://localhost:5000/api/post/getdetail/" + route.params.id)
@@ -58,16 +58,12 @@ onMounted(() => {
             </h1>
             <ul>
                 <li>{{ postData.created }}</li>
-                <li>created by <strong>@{{ postData.author }}</strong></li>
-                <li>viewed</li>
+                <li>CREATED BY <strong>@{{ postData.author }}</strong></li>
             </ul>
         </div>
-        <!--        <div v-html="postData.body" class="content"></div>-->
         <v-md-editor :model-value="postData.body" mode="preview"></v-md-editor>
         <hr class="end">
         <CommentMaker :post_id="route.params.id" :post_title="postData.title"/>
-        <!--    <commentList />-->
-        <!--    <commentList />-->
 
         <h2>评论</h2>
         <hr>
@@ -82,7 +78,6 @@ onMounted(() => {
 
         </div>
     </div>
-    <!--    <CommentItem :author="'sadwa'" :body="'the quick brown fox jumps over the lazy dog'" :date="'1234/12/12'"/>-->
 
 </template>
 

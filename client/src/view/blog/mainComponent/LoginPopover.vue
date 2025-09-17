@@ -2,10 +2,6 @@
 import {ref} from "vue"
 import axios from "axios";
 
-// const props = defineProps({
-//     visible: Boolean,
-// })
-
 const model = defineModel()
 
 const user = ref({
@@ -17,9 +13,10 @@ function login() {
     axios.post("http://localhost:5000/api/user/login", user.value)
         .then(res => {
             console.log(res.data)
-            if (res.data.code ===200) {
+            if (res.data.code === 200) {
                 model.value = false
-            }})
+            }
+        })
 }
 
 </script>
@@ -27,7 +24,7 @@ function login() {
 <template>
 
     <el-dialog v-model="model" title="登录" width="500">
-        <el-form :model="user" >
+        <el-form :model="user">
             <el-form-item label="用户名" label-width="70px">
                 <el-input v-model="user.username"/>
             </el-form-item>
@@ -39,7 +36,6 @@ function login() {
             <el-button type="primary" @click="login">登录</el-button>
         </template>
     </el-dialog>
-
 
 </template>
 

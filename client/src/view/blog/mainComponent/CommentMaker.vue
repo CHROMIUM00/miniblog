@@ -4,7 +4,6 @@
 import {reactive, ref} from "vue";
 import axios from "axios";
 import {useRouter} from "vue-router";
-// import type {FormRules} from "element-plus";
 
 const router = useRouter()
 
@@ -21,11 +20,6 @@ const commentItem = ref({
 })
 
 function submit() {
-    // console.log(commentItem)
-    // console.log(commentItem.value)
-
-    // console.log(props.postid)
-
     if (commentItem.value.author === "") {
         commentItem.value.author = "Anonymous"
     }
@@ -35,10 +29,7 @@ function submit() {
             console.log(res.data)
             router.go(0)
         })
-
 }
-
-
 </script>
 
 <template>
